@@ -1,12 +1,12 @@
 extends CharacterBody2D
 
-@export var speed := 300
+@export var speed := 600
 @export var bullet_scene: PackedScene
-@export var fire_rate := 0.3
+@export var fire_rate := 0.05
 @export var max_health := 100
 @export var detection_radius := 250.0
 @export var arena_rect := Rect2(Vector2.ZERO, Vector2(2000, 2000))  # limite da arena
-@export var bullet_damage := 10
+@export var bullet_damage := 40
 
 
 var health := max_health

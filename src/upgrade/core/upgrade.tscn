@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bxom0wstrn2u6"]
 
-[ext_resource type="Script" uid="uid://bipg57gdcxwr1" path="res://Scripts/upgrade_ui.gd" id="1_j3xiq"]
+[ext_resource type="Script" uid="uid://bipg57gdcxwr1" path="res://src/upgrade/core/upgrade.gd" id="1_j3xiq"]
 
 [node name="UpgradeUI" type="Control"]
 layout_mode = 3
