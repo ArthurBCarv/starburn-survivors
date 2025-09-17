@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://dp2qeho6e505k"]
+
+[ext_resource type="Script" uid="uid://cxpwlfn2j5ecu" path="res://Scripts/Game.gd" id="1_b2bpf"]
+[ext_resource type="Texture2D" uid="uid://d2yqficddxnwt" path="res://icon.svg" id="3_fgofq"]
+[ext_resource type="PackedScene" uid="uid://c6cpintbwhb14" path="res://scenes/player.tscn" id="4_2irst"]
+[ext_resource type="PackedScene" uid="uid://cm14w1inikn7x" path="res://scenes/hud.tscn" id="5_7lihs"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_b2bpf")
+player = NodePath("Player")
+camera = NodePath("Player")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(1330, 1208)
+scale = Vector2(23.4687, 19.375)
+texture = ExtResource("3_fgofq")
+
+[node name="Player" parent="." instance=ExtResource("4_2irst")]
+position = Vector2(1017, 961)
+
+[node name="Hud" parent="." instance=ExtResource("5_7lihs")]
