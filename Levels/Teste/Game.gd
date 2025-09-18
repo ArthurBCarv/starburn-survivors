@@ -2,8 +2,6 @@ extends Node2D
 
 enum EnemyType { ALIEN }
 
-
-
 @export var player: NodePath
 @export var camera: NodePath
 
@@ -23,7 +21,7 @@ var spawn_timer := 0.0
 
 var last_enemy_instance: Node = null
 
-enum Directions {UP,DOWN,LEFT,RIGHT}
+enum Directions { UP, DOWN, LEFT, RIGHT }
 
 var spawn_functions := {
 	Directions.UP: func(cam_pos, viewport_size, margin):
@@ -36,7 +34,8 @@ var spawn_functions := {
 		return Vector2(cam_pos.x - viewport_size.x/2 - margin, randf_range(cam_pos.y - viewport_size.y/2, cam_pos.y + viewport_size.y/2)),
 
 	Directions.RIGHT: func(cam_pos, viewport_size, margin):
-		return Vector2(cam_pos.x + viewport_size.x/2 + margin, randf_range(cam_pos.y - viewport_size.y/2, cam_pos.y + viewport_size.y/2)),}
+		return Vector2(cam_pos.x + viewport_size.x/2 + margin, randf_range(cam_pos.y - viewport_size.y/2, cam_pos.y + viewport_size.y/2)),
+}
 
 func _ready():
 	randomize()
@@ -53,19 +52,23 @@ func _process(delta):
 	# checar se acabou a wave
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	if enemies.size() == 0 and enemies_spawned >= enemies_to_spawn:
-		wave += 1
-		print("Starting wave ", wave)
-		start_wave()
+		if wave % 3 == 0:
+			spawn_boss()
+		else:
+			wave += 1
+			print("Starting wave ", wave)
+			start_wave()
 
 func get_possible_enemies_for_wave(wave: int) -> Array:
 	var enemys_possibles = [EnemyType.ALIEN]
-	
 	# Se quiser implementar novos inimigos faça assim:
 	# if wave > X:
 	#    enemys_possibles.append(novo_inimigo)
-	
+	var boss: PackedScene = enemy_scenes.get(enemys_possibles.front())
+	if boss != null:
+		var temp_enemy = boss.instantiate()
+		last_enemy_instance = temp_enemy
 	return enemys_possibles
-	
 
 func choose_enemy(possible_enemies: Array) -> int:
 	var total = 0
@@ -83,16 +86,13 @@ func start_wave():
 	var growth_rate := 1.5
 	enemies_to_spawn = int(base_enemies * pow(growth_rate, wave - 1))
 	enemies_spawned = 0
-	spawn_timer = 0.1 # start rápido
+	spawn_timer = 0.05 # start rápido
 	print("Wave ", wave, " vai spawnar ", enemies_to_spawn, " inimigos.")
-
-	# Boss check
-	if wave % 3 == 0:
-		call_deferred("spawn_boss")
 
 func spawn_enemy():
 	var player_node = get_node(player)
 	if not player_node:
+		print("Player não encontrado!")
 		return
 
 	var possible_enemies = get_possible_enemies_for_wave(wave)
@@ -105,19 +105,38 @@ func spawn_enemy():
 	var enemy = ps.instantiate()
 	enemy.global_position = get_spawn_area_position()
 	enemy.target = player_node
+	if enemy.has_method("scale_with_wave"):
+		enemy.scale_with_wave(wave)
 	add_child(enemy)
 	last_enemy_instance = enemy
 	enemies_spawned += 1
-	print("Spawned enemy ", etype)
+	print("Spawned enemy ", enemies_spawned, "\n")
 
 func spawn_boss():
-	if last_enemy_instance and player:
-		var boss_node = BossFactory.make_boss(last_enemy_instance)
-		if boss_node:
-			boss_node.global_position = get_spawn_area_position()
-			boss_node.target = get_node(player)
-			add_child(boss_node)
-			print("Boss spawned!")
+	print(">> Tentando spawnar Boss")
+	var base_enemy_type = EnemyType.ALIEN # por enquanto só existe esse
+	var ps: PackedScene = enemy_scenes.get(base_enemy_type)
+	if not ps:
+		push_error("Cena base não encontrada para Boss")
+		return
+
+	# cria inimigo base
+	var enemy = ps.instantiate()
+	# manda para a BossFactory criar um boss a partir dele
+	var boss_node = BossFactory.make_boss(enemy)
+	if boss_node:
+		boss_node.global_position = get_spawn_area_position()
+		boss_node.target = get_node(player)
+		if boss_node.has_method("scale_with_wave"):
+			boss_node.scale_with_wave(wave)
+		add_child(boss_node)
+		print("Boss spawned na wave ", wave)
+
+	# depois do boss, só então avança a wave
+	wave += 1
+	print("Starting wave ", wave)
+	start_wave()
+
 
 # -----------------------
 # Spawn Area (mais natural)

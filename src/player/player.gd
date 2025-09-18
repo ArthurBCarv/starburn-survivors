@@ -6,7 +6,7 @@ extends CharacterBody2D
 @export var max_health := 100
 @export var detection_radius := 250.0
 @export var arena_rect := Rect2(Vector2.ZERO, Vector2(2000, 2000))  # limite da arena
-@export var bullet_damage := 40
+@export var bullet_damage := 10
 
 
 var health := max_health
@@ -55,14 +55,3 @@ func take_damage(amount):
 	if health <= 0:
 		queue_free()  # game over pode ser chamado no Game.gd
 		
-func upgrade_speed():
-	speed += 50
-	print("Velocidade aumentada para ", speed)
-
-func upgrade_damage():
-	bullet_damage += 5
-	print("Dano da arma aumentado para ", bullet_damage)
-
-func upgrade_range():
-	detection_radius += 50
-	print("Alcance aumentado para ", detection_radius)

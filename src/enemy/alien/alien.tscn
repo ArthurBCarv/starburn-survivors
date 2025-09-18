@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dm4648uwms41o"]
 
-[ext_resource type="Script" uid="uid://brmghi51i4rpo" path="res://Scripts/alien.gd" id="1_1f0kj"]
+[ext_resource type="Script" uid="uid://brmghi51i4rpo" path="res://src/enemy/alien/alien.gd" id="1_1f0kj"]
 [ext_resource type="Texture2D" uid="uid://d2yqficddxnwt" path="res://icon.svg" id="1_hghv2"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1f0kj"]
