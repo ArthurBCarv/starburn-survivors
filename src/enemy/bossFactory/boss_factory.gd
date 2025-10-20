@@ -1,6 +1,79 @@
 extends Node
 class_name BossFactory
 
+## Factory para criar bosses escaláveis automaticamente
+
+## Cria um boss baseado em um inimigo base
+static func create_boss_from_enemy(enemy_scene: PackedScene, wave: int = 1) -> BossEnemy:
+	var enemy = enemy_scene.instantiate()
+	
+	# Se já for um boss, apenas retorna
+	if enemy is BossEnemy:
+		return enemy
+	
+	# Se for um inimigo base, converte para boss
+	if enemy is EnemyBase:
+		var boss = _convert_to_boss(enemy)
+		boss.scale_with_wave(wave)
+		return boss
+	
+	push_error("[BossFactory] Cena fornecida não é um EnemyBase válido")
+	return null
+
+## Converte um EnemyBase em BossEnemy
+static func _convert_to_boss(enemy: EnemyBase) -> BossEnemy:
+	# Cria novo boss
+	var boss = BossEnemy.new()
+	
+	# Copia propriedades do inimigo original
+	boss.speed = enemy.speed
+	boss.base_health = enemy.base_health
+	boss.base_damage = enemy.base_damage
+	boss.attack_cooldown = enemy.attack_cooldown
+	boss.attack_range = enemy.attack_range
+	boss.xp_reward = enemy.xp_reward
+	
+	# Copia filhos (sprite, collision, etc)
+	for child in enemy.get_children():
+		var duplicated = child.duplicate()
+		boss.add_child(duplicated)
+	
+	# Libera o inimigo original
+	enemy.queue_free()
+	
+	return boss
+
+## Cria um boss genérico com stats customizados
+static func create_generic_boss(
+	health: float = 500.0,
+	damage: float = 30.0,
+	speed: float = 100.0,
+	size: float = 2.5,
+	color: Color = Color.PURPLE
+) -> BossEnemy:
+	var boss = BossEnemy.new()
+	boss.base_health = health
+	boss.base_damage = damage
+	boss.speed = speed
+	boss.boss_size_multiplier = size
+	boss.death_particle_color = color
+	
+	# Adiciona sprite simples
+	var sprite = Sprite2D.new()
+	sprite.modulate = color
+	boss.add_child(sprite)
+	
+	# Adiciona collision
+	var collision = CollisionShape2D.new()
+	var shape = CircleShape2D.new()
+	shape.radius = 20.0
+	collision.shape = shape
+	boss.add_child(collision)
+	
+	return boss
+
+class_name BossFactory
+
 # Multiplicadores padrão para boss (ajuste conforme quiser)
 const DEFAULT_HEALTH_MULT := 3.5
 const DEFAULT_DAMAGE_MULT := 2.0

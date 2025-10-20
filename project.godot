@@ -15,6 +15,12 @@ run/main_scene="uid://dp2qeho6e505k"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+ObjectPool="*res://src/core/autoload/object_pool.gd"
+EventBus="*res://src/core/autoload/event_bus.gd"
+VFXManager="*res://src/vfx/vfx_manager.gd"
+
 [display]
 
 window/size/viewport_width=2000
