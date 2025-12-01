@@ -4,7 +4,6 @@ enum EnemyType { ALIEN }
 enum Directions { UP, DOWN, LEFT, RIGHT }
 
 @export var player: NodePath
-@export var camera: NodePath
 
 @export var enemy_scenes := {
 	EnemyType.ALIEN: preload("res://src/enemy/alien/alien.tscn"),
@@ -323,9 +322,7 @@ func _choose_enemy(possible_enemies: Array[int]) -> int:
 
 
 func _get_spawn_area_position() -> Vector2:
-	var cam: Node2D = get_node_or_null(camera)
-	if cam == null:
-		return Vector2.ZERO
+	var cam = $Player/Camera
 	
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	var cam_pos: Vector2 = cam.global_position

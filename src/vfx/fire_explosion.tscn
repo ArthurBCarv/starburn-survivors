@@ -13,10 +13,11 @@ radius = 48.0
 
 [node name="FireExplosion" type="Node2D"]
 z_index = 500
+position = Vector2(0, -13)
 script = ExtResource("1")
+metadata/_edit_group_ = true
 
 [node name="Particles" type="GPUParticles2D" parent="."]
-position = Vector2(198, 118)
 emitting = false
 amount = 120
 lifetime = 0.4
@@ -25,7 +26,7 @@ explosiveness = 1.0
 process_material = SubResource("2")
 
 [node name="Area2D" type="Area2D" parent="."]
-position = Vector2(198, 118)
+metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("3")

@@ -9,8 +9,8 @@ func _ready() -> void:
 	# Stats base
 	base_health = 30.0
 	base_damage = 10.0
-	speed = 150.0
-	xp_reward = 5
+	speed = 100.0
+	xp_reward = 10
 	attack_cooldown = 1.0
 	attack_range = 25.0
 	

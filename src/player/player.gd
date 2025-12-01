@@ -46,6 +46,7 @@ func _on_boss_died(boss: Node, xp_amount: int):
 
 func _process(delta):
 	_move(delta)
+	_flip()
 	_auto_shoot(delta)
 
 	# DEBUG: Pressione T para ganhar XP rapidamente
@@ -61,38 +62,15 @@ func _move(delta):
 	velocity = input_vector * speed
 	move_and_slide()
 
-	# Limita o movimento do player dentro da arena com base na câmera ativa
-	var camera = get_viewport().get_camera_2d()
-	if camera:
-		var viewport_size = get_viewport_rect().size
-		var camera_pos = camera.global_position
-		var half_width = viewport_size.x * camera.zoom.x * 0.5
-		var half_height = viewport_size.y * camera.zoom.y * 0.5
 
-		# Limites baseados na câmera atual (com margem de 16 pixels)
-		var min_x = camera_pos.x - half_width + 16
-		var max_x = camera_pos.x + half_width - 16
-		var min_y = camera_pos.y - half_height + 16
-		var max_y = camera_pos.y + half_height - 16
-
-		# Ajusta limites para não ultrapassar os limites da arena (valores hardcoded como antes)
-		min_x = max(min_x, 16)
-		max_x = min(max_x, 1984)
-		min_y = max(min_y, 16)
-		max_y = min(max_y, 1984)
-
-		position.x = clamp(position.x, min_x, max_x)
-		position.y = clamp(position.y, min_y, max_y)
-
+func _flip():
+	if velocity.x < 0:
+		$AnimatedSprite2D.flip_h = true
+	elif velocity.x > 0:
+		$AnimatedSprite2D.flip_h = false
+		
 func _auto_shoot(delta):
 	# Ajusta arena_rect para corresponder aos limites da câmera ativa (Camera2D), se houver
-	var cam := get_viewport().get_camera_2d()
-	if cam:
-		var visible := get_viewport().get_visible_rect()
-		# world_size leva em conta o zoom da câmera
-		var world_size := visible.size * cam.zoom
-		arena_rect.position = cam.global_position - world_size * 0.5
-		arena_rect.size = world_size
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var closest_enemy: Node2D = null
 	var closest_dist := INF

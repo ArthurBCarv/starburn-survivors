@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://c6cpintbwhb14"]
+
+[ext_resource type="Script" uid="uid://bvief6tvnvfec" path="res://src/player/player.gd" id="1_onrkg"]
+[ext_resource type="PackedScene" uid="uid://bpyf6q1xlyqg" path="res://src/weapons/projectiles/bullet/bullet.tscn" id="2_6t5aa"]
+[ext_resource type="Texture2D" uid="uid://tnh86w50r11e" path="res://assets/Soldier-V5.png" id="3_5f2sf"]
+[ext_resource type="Script" uid="uid://bx35i82pvo3ek" path="res://src/player/upgrade_manager.gd" id="4_244u8"]
+[ext_resource type="Script" uid="uid://bvhn71ow322l1" path="res://src/player/player_level.gd" id="5_5f2sf"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cm0pq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5f2sf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jiejy"]
+size = Vector2(8, 14)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 128
+collision_mask = 128
+script = ExtResource("1_onrkg")
+speed = null
+bullet_scene = ExtResource("2_6t5aa")
+fire_rate = 0.25
+max_health = null
+detection_radius = null
+arena_rect = null
+bullet_damage = null
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(0, 200)
+zoom = Vector2(2.5, 2.5)
+process_callback = 0
+limit_left = 0
+limit_top = 0
+limit_right = 2016
+limit_bottom = 2032
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 14.0
+editor_draw_limits = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, 2.842171e-14)
+scale = Vector2(0.33125, 0.33124998)
+sprite_frames = SubResource("SpriteFrames_cm0pq")
+
+[node name="UpgradeManager" type="Node" parent="."]
+script = ExtResource("4_244u8")
+
+[node name="PlayerLevel" type="Node" parent="."]
+script = ExtResource("5_5f2sf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jiejy")

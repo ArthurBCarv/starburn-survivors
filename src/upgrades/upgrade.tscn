@@ -40,6 +40,3 @@ size_flags_stretch_ratio = 0.0
 custom_minimum_size = Vector2(300, 200)
 layout_mode = 2
 text = "+Range"
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(992, 992)
