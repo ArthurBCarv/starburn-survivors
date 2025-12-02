@@ -8,6 +8,7 @@ extends CharacterBody2D
 @export var arena_rect := Rect2(Vector2.ZERO, Vector2(2000, 2000))
 @export var bullet_damage := 10.0
 
+var closest_enemy: Node2D = null
 var health := 0.0
 var last_shot_time := 0.0
 var move_dir := Vector2.RIGHT
@@ -16,6 +17,7 @@ var crit_chance := 0.0
 
 @onready var upgrade_manager: UpgradeManager = $UpgradeManager
 @onready var player_level: PlayerLevel = $PlayerLevel
+@onready var animation: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready():
 	health = float(max_health)
@@ -45,9 +47,20 @@ func _on_boss_died(boss: Node, xp_amount: int):
 		print("[Player] Ganhou %d XP de boss" % xp_amount)
 
 func _process(delta):
+
+	
 	_move(delta)
 	_flip()
 	_auto_shoot(delta)
+	_animation(delta)
+	if closest_enemy != null:
+		var dir = (closest_enemy.global_position - $Gun.global_position)
+		var angle = dir.angle()
+		if dir.x < 0:
+			$Gun.scale.y = -1
+		else:
+			$Gun.scale.y = 1
+		$Gun.rotation  =  lerp_angle($Gun.rotation, angle, fire_rate)
 
 	# DEBUG: Pressione T para ganhar XP rapidamente
 	if Input.is_action_just_pressed("ui_text_completion_accept") or Input.is_key_pressed(KEY_T):
@@ -62,17 +75,23 @@ func _move(delta):
 	velocity = input_vector * speed
 	move_and_slide()
 
+func _animation(delta):
+	if velocity.is_zero_approx():
+		animation.play("Idle")
+		animation.speed_scale = 4
+	else:
+		animation.play("Run")
+		var vel: float = float(velocity.x)*velocity.x +float(velocity.y)*velocity.y
+		animation.speed_scale = sqrt(vel) / 100
 
 func _flip():
 	if velocity.x < 0:
-		$AnimatedSprite2D.flip_h = true
+		animation.flip_h = true
 	elif velocity.x > 0:
-		$AnimatedSprite2D.flip_h = false
-		
+		animation.flip_h = false
 func _auto_shoot(delta):
 	# Ajusta arena_rect para corresponder aos limites da câmera ativa (Camera2D), se houver
 	var enemies = get_tree().get_nodes_in_group("enemies")
-	var closest_enemy: Node2D = null
 	var closest_dist := INF
 	
 	for e in enemies:
@@ -81,11 +100,9 @@ func _auto_shoot(delta):
 			if dist < closest_dist and dist <= detection_radius:
 				closest_dist = dist
 				closest_enemy = e
-	
 	var now_sec := Time.get_ticks_msec() / 1000.0
 	if closest_enemy and (now_sec - last_shot_time) > fire_rate:
 		var dir = (closest_enemy.global_position - global_position).normalized()
-		
 		# Efeito visual de disparo
 		VFXManager.spawn_muzzle_flash(global_position + dir * 20)
 		

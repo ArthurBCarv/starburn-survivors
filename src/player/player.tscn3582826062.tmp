@@ -209,26 +209,23 @@ animations = [{
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 128
 collision_mask = 128
-motion_mode = 1
 script = ExtResource("1_onrkg")
 bullet_scene = ExtResource("2_6t5aa")
 fire_rate = 0.25
-metadata/_edit_group_ = true
 
 [node name="Camera" type="Camera2D" parent="."]
 texture_filter = 1
+position = Vector2(1, 150)
 zoom = Vector2(2, 2)
 process_callback = 0
 limit_left = 0
 limit_top = 0
 limit_right = 2026
-limit_bottom = 2000
+limit_bottom = 2175
 limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 14.0
-drag_vertical_offset = 1.0
 editor_draw_limits = true
-editor_draw_drag_margin = true
 
 [node name="UpgradeManager" type="Node" parent="."]
 script = ExtResource("4_244u8")
