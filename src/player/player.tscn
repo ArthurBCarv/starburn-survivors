@@ -1,118 +1,120 @@
-[gd_scene load_steps=36 format=3 uid="uid://c6cpintbwhb14"]
+[gd_scene load_steps=39 format=3 uid="uid://c6cpintbwhb14"]
 
 [ext_resource type="Script" uid="uid://bvief6tvnvfec" path="res://src/player/player.gd" id="1_onrkg"]
 [ext_resource type="PackedScene" uid="uid://bpyf6q1xlyqg" path="res://src/weapons/projectiles/bullet/bullet.tscn" id="2_6t5aa"]
+[ext_resource type="AudioStream" path="res://assets/Sound/plasma_shot.wav" id="3_plasma"]
 [ext_resource type="Script" uid="uid://bx35i82pvo3ek" path="res://src/player/upgrade_manager.gd" id="4_244u8"]
 [ext_resource type="Script" uid="uid://bvhn71ow322l1" path="res://src/player/player_level.gd" id="5_5f2sf"]
-[ext_resource type="Texture2D" uid="uid://dcmwjw0e52bs0" path="res://assets/soldier/Soldier-V6-idle-Sheet.png" id="5_jiejy"]
-[ext_resource type="Texture2D" uid="uid://du0my7qgrm61m" path="res://assets/soldier/Soldier-Sheet.png" id="6_o822w"]
-[ext_resource type="Texture2D" uid="uid://v0hxgch6vikb" path="res://assets/gun/gun.png" id="7_o822w"]
+[ext_resource type="AudioStream" path="res://assets/Sound/take_damage.wav" id="6_damage"]
+[ext_resource type="Texture2D" uid="uid://dcmwjw0e52bs0" path="res://assets/soldier/Soldier-V6-idle-Sheet.png" id="7_jiejy"]
+[ext_resource type="Texture2D" uid="uid://du0my7qgrm61m" path="res://assets/soldier/Soldier-Sheet.png" id="8_o822w"]
+[ext_resource type="Texture2D" uid="uid://v0hxgch6vikb" path="res://assets/gun/gun.png" id="9_o822w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jiejy"]
 size = Vector2(25, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jiejy"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(0, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o822w"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(44, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x42xx"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(88, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l271a"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(132, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8ydov"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(176, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ylhto"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(220, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cwolq"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(264, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2smqc"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(308, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rl62b"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(352, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wlj80"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(396, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6bm8s"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(440, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hrerp"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(484, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oyld2"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(528, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vwsmr"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(572, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jcdrv"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(616, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hja65"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(660, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5shm8"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(704, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5efpn"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(748, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4uy46"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(792, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k60ra"]
-atlas = ExtResource("5_jiejy")
+atlas = ExtResource("7_jiejy")
 region = Rect2(836, 0, 44, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a4vah"]
-atlas = ExtResource("6_o822w")
+atlas = ExtResource("8_o822w")
 region = Rect2(0, 0, 41, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vwi60"]
-atlas = ExtResource("6_o822w")
+atlas = ExtResource("8_o822w")
 region = Rect2(41, 0, 41, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o04tx"]
-atlas = ExtResource("6_o822w")
+atlas = ExtResource("8_o822w")
 region = Rect2(82, 0, 41, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2873"]
-atlas = ExtResource("6_o822w")
+atlas = ExtResource("8_o822w")
 region = Rect2(123, 0, 41, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dpt0q"]
-atlas = ExtResource("6_o822w")
+atlas = ExtResource("8_o822w")
 region = Rect2(164, 0, 41, 42)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wcxbk"]
-atlas = ExtResource("6_o822w")
+atlas = ExtResource("8_o822w")
 region = Rect2(205, 0, 41, 42)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_p6grl"]
@@ -241,11 +243,20 @@ shape = SubResource("RectangleShape2D_jiejy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-scale = Vector2(1.0853659, 1)
+position = Vector2(-0.6399684, 0)
+scale = Vector2(1.0556082, 1)
 sprite_frames = SubResource("SpriteFrames_p6grl")
-animation = &"Idle"
+animation = &"Run"
+autoplay = "Idle"
+frame_progress = 0.9775408
 
 [node name="Gun" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(2, -1)
-texture = ExtResource("7_o822w")
+texture = ExtResource("9_o822w")
+
+[node name="PlasmaShot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_plasma")
+
+[node name="TakeDamage" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_damage")

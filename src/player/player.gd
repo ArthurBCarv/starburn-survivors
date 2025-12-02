@@ -105,10 +105,12 @@ func _auto_shoot(delta):
 		var dir = (closest_enemy.global_position - global_position).normalized()
 		# Efeito visual de disparo
 		VFXManager.spawn_muzzle_flash(global_position + dir * 20)
-		
+
+		$PlasmaShot.play()
+
 		var bullet = ObjectPool.acquire("bullet", get_parent(), global_position)
 		if bullet:
-			if bullet.has_method("on_spawn_from"): 
+			if bullet.has_method("on_spawn_from"):
 				bullet.on_spawn_from(self)
 			bullet.direction = dir
 			bullet.damage = bullet_damage
@@ -116,6 +118,8 @@ func _auto_shoot(delta):
 
 func take_damage(amount):
 	health -= amount
+
+	$TakeDamage.play()
 
 	# Emite mudança de HP
 	if EventBus:
@@ -129,6 +133,7 @@ func _on_death():
 	if EventBus:
 		EventBus.player_died.emit()
 	queue_free()
+	get_tree().change_scene_to_file("res://levels/Tela Inicial/control.tscn")
 
 func _on_level_up(new_level: int):
 	print("[Player] Level UP! Novo nível: %d" % new_level)

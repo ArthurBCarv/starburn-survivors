@@ -135,52 +135,57 @@ func _spawn_enemy(force_boss: bool = false) -> void:
 		if not _player:
 			return
 
-	# Escolhe cena de inimigo
 	var enemy_scene: PackedScene
+	var enemy: Node
 
-	if force_boss and boss_scenes.size() > 0:
-		# Spawna boss
-		enemy_scene = boss_scenes.pick_random()
-	elif _should_spawn_elite() and elite_enemy_scenes.size() > 0:
-		# Spawna elite
+	if force_boss:
+		if enemy_scenes.size() > 0:
+			enemy_scene = enemy_scenes.pick_random()
+			enemy = BossFactory.create_boss_from_alien(enemy_scene, current_wave)
+			get_tree().current_scene.add_child(enemy)
+			enemy.global_position = _get_spawn_position_outside_camera()
+
+			if enemy.has_method("set") and _player:
+				enemy.set("target", _player)
+
+			enemy.add_to_group("boss")
+			print("[EnemySpawner] 👑 BOSS SPAWNOU! Wave %d - Scale: %.1fx" % [current_wave, 1.0 + (current_wave * 0.3)])
+
+			enemies_spawned += 1
+			enemies_alive += 1
+
+			if EventBus:
+				EventBus.boss_spawned.emit(enemy)
+		else:
+			push_warning("[EnemySpawner] Nenhuma cena de inimigo para criar boss!")
+		return
+
+	if _should_spawn_elite() and elite_enemy_scenes.size() > 0:
 		enemy_scene = elite_enemy_scenes.pick_random()
 		print("[EnemySpawner] ⭐ Elite spawnou!")
 	elif enemy_scenes.size() > 0:
-		# Spawna inimigo normal
 		enemy_scene = enemy_scenes.pick_random()
 	else:
 		push_warning("[EnemySpawner] Nenhuma cena de inimigo configurada!")
 		return
 
-	# Calcula posição de spawn fora da câmera
 	var spawn_pos = _get_spawn_position_outside_camera()
 
-	# Spawna inimigo
-	var enemy = enemy_scene.instantiate()
+	enemy = enemy_scene.instantiate()
 	get_tree().current_scene.add_child(enemy)
 	enemy.global_position = spawn_pos
 
-	# Configura inimigo com escalonamento de wave
 	if enemy.has_method("scale_with_wave"):
 		enemy.scale_with_wave(current_wave)
 
 	if enemy.has_method("set") and _player:
 		enemy.set("target", _player)
 
-	# Marca como boss se for o boss
-	if force_boss:
-		enemy.add_to_group("boss")
-		print("[EnemySpawner] 👑 BOSS SPAWNOU!")
-
 	enemies_spawned += 1
 	enemies_alive += 1
 
-	# Emite sinal de spawn
 	if EventBus:
-		if force_boss:
-			EventBus.boss_spawned.emit(enemy)
-		else:
-			EventBus.enemy_spawned.emit(enemy)
+		EventBus.enemy_spawned.emit(enemy)
 
 func _should_spawn_elite() -> bool:
 	# Chance de spawnar elite aumenta com as waves

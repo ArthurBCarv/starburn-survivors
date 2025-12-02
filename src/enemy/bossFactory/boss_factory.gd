@@ -1,185 +1,72 @@
 extends Node
 class_name BossFactory
 
-## Factory para criar bosses escaláveis automaticamente
-
-## Cria um boss baseado em um inimigo base
-static func create_boss_from_enemy(enemy_scene: PackedScene, wave: int = 1) -> BossEnemy:
-	var enemy = enemy_scene.instantiate()
+static func create_boss_from_alien(alien_scene: PackedScene, wave: int = 1) -> Node:
+	var boss = alien_scene.instantiate()
 	
-	# Se já for um boss, apenas retorna
-	if enemy is BossEnemy:
-		return enemy
+	var scale_factor = 1.0 + (wave * 0.3)
+	var health_mult = 5.0 + (wave * 1.5)
+	var damage_mult = 2.5 + (wave * 0.5)
+	var speed_mult = 0.9
 	
-	# Se for um inimigo base, converte para boss
-	if enemy is EnemyBase:
-		var boss = _convert_to_boss(enemy)
-		boss.scale_with_wave(wave)
-		return boss
+	_apply_boss_stats(boss, health_mult, damage_mult, speed_mult, wave)
+	_scale_boss_visual(boss, scale_factor)
 	
-	push_error("[BossFactory] Cena fornecida não é um EnemyBase válido")
-	return null
-
-## Converte um EnemyBase em BossEnemy
-static func _convert_to_boss(enemy: EnemyBase) -> BossEnemy:
-	# Cria novo boss
-	var boss = BossEnemy.new()
-	
-	# Copia propriedades do inimigo original
-	boss.speed = enemy.speed
-	boss.base_health = enemy.base_health
-	boss.base_damage = enemy.base_damage
-	boss.attack_cooldown = enemy.attack_cooldown
-	boss.attack_range = enemy.attack_range
-	boss.xp_reward = enemy.xp_reward
-	
-	# Copia filhos (sprite, collision, etc)
-	for child in enemy.get_children():
-		var duplicated = child.duplicate()
-		boss.add_child(duplicated)
-	
-	# Libera o inimigo original
-	enemy.queue_free()
+	boss.name = "AlienBoss_Wave" + str(wave)
 	
 	return boss
 
-## Cria um boss genérico com stats customizados
-static func create_generic_boss(
-	health: float = 500.0,
-	damage: float = 30.0,
-	speed: float = 100.0,
-	size: float = 2.5,
-	color: Color = Color.PURPLE
-) -> BossEnemy:
-	var boss = BossEnemy.new()
-	boss.base_health = health
-	boss.base_damage = damage
-	boss.speed = speed
-	boss.boss_size_multiplier = size
-	boss.death_particle_color = color
-	
-	# Adiciona sprite simples
-	var sprite = Sprite2D.new()
-	sprite.modulate = color
-	boss.add_child(sprite)
-	
-	# Adiciona collision
-	var collision = CollisionShape2D.new()
-	var shape = CircleShape2D.new()
-	shape.radius = 20.0
-	collision.shape = shape
-	boss.add_child(collision)
-	
-	return boss
-
-class_name BossFactory
-
-# Multiplicadores padrão para boss (ajuste conforme quiser)
-const DEFAULT_HEALTH_MULT := 3.5
-const DEFAULT_DAMAGE_MULT := 2.0
-const DEFAULT_SPEED_MULT := 0.85
-const DEFAULT_ATTACK_COOLDOWN_MULT := 0.9
-const DEFAULT_SCALE_MULT := Vector2(1.9, 1.9)
-
-# API pública: aceita PackedScene, Node (instância) ou caminho String
-static func make_boss(enemy_source) -> Node:
-	"""
-	Cria e retorna um nó que representa o boss baseado em `enemy_source`.
-	`enemy_source` pode ser:
-	 - PackedScene (vai instanciar)
-	 - Node (instância já criada) -> será duplicada
-	 - String (path) -> carrega como PackedScene
-	"""
-	var base_instance: Node = null
-
-	# Resolver o tipo de entrada
-	if typeof(enemy_source) == TYPE_OBJECT and enemy_source is PackedScene:
-		base_instance = enemy_source.instantiate()
-	elif typeof(enemy_source) == TYPE_STRING:
-		var ps = load(enemy_source)
-		if ps and ps is PackedScene:
-			base_instance = ps.instantiate()
-		else:
-			push_error("makeBoss: path informado não é uma PackedScene: " + str(enemy_source))
-			return null
-	elif typeof(enemy_source) == TYPE_OBJECT and enemy_source is Node:
-		# duplicar a instância passada (deep-ish copy)
-		# duplicate() costuma funcionar para réplicas; se houver recursos externos, talvez precise de ajustes
-		base_instance = enemy_source.duplicate()
-	else:
-		push_error("makeBoss: Tipo de enemy_source não suportado: " + str(typeof(enemy_source)))
-		return null
-
-	# Aplica modificadores de atributos (se estiverem presentes)
-	_apply_boss_stats(base_instance, DEFAULT_HEALTH_MULT, DEFAULT_DAMAGE_MULT, DEFAULT_SPEED_MULT, DEFAULT_ATTACK_COOLDOWN_MULT)
-
-	# Aumenta a escala visual e ajusta shapes das colisões (se existirem)
-	_scale_node_recursive(base_instance, DEFAULT_SCALE_MULT)
-
-	# Nome visual para debug
-	base_instance.name = str(base_instance.name) + "_BOSS"
-
-	return base_instance
-
-
-# ----- helpers -----
-static func _apply_boss_stats(node: Node, health_mult: float, damage_mult: float, speed_mult: float, attack_cooldown_mult: float) -> void:
-	# usa get_property_list para checar se as propriedades existem e setá-las de forma segura
+static func _apply_boss_stats(node: Node, health_mult: float, damage_mult: float, speed_mult: float, wave: int) -> void:
 	var props = node.get_property_list()
 	var prop_names = []
 	for p in props:
 		prop_names.append(p.name)
-
+	
 	if "max_health" in prop_names:
-		node.max_health = float(node.get("max_health")) * health_mult
-		# se existir health também, atualiza para full health
+		var base_health = node.get("max_health")
+		node.max_health = float(base_health) * health_mult
 		if "health" in prop_names:
 			node.set("health", node.get("max_health"))
-
+	
+	if "base_health" in prop_names:
+		var base_h = node.get("base_health")
+		node.base_health = float(base_h) * health_mult
+		if "health" in prop_names:
+			node.set("health", node.base_health)
+	
 	if "damage" in prop_names:
 		node.damage = float(node.get("damage")) * damage_mult
-
+	
+	if "base_damage" in prop_names:
+		node.base_damage = float(node.get("base_damage")) * damage_mult
+	
 	if "speed" in prop_names:
 		node.speed = float(node.get("speed")) * speed_mult
+	
+	if "xp_reward" in prop_names:
+		node.xp_reward = int(node.get("xp_reward")) * (5 + wave)
 
-	if "attack_cooldown" in prop_names:
-		# reduzir o cooldown (ataques mais rápidos)
-		node.attack_cooldown = float(node.get("attack_cooldown")) * attack_cooldown_mult
-
-	# Se o nó tiver filhos que contenham propriedades personalizadas (ex.: pontos, loot),
-	# não mexemos neles automaticamente — você pode estender aqui conforme necessidade.
-
-
-static func _scale_node_recursive(node: Node, scale_mult: Vector2) -> void:
-	# Escala nó visual (CanvasItem) e ajusta colisões (CollisionShape2D)
+static func _scale_boss_visual(node: Node, scale_factor: float) -> void:
+	var scale_vec = Vector2(scale_factor, scale_factor)
+	
 	if node is CanvasItem:
-		# multiplicar a escala atual
-		node.scale = node.scale * scale_mult
-
-	# Ajustar CollisionShape2D shapes que não escalam automaticamente
-	if node is CollisionShape2D:
-		var s = node.shape
-		if s:
-			_scale_shape(s, scale_mult)
-
-	# Recurse
+		node.scale = node.scale * scale_vec
+	
 	for child in node.get_children():
-		if child is Node:
-			_scale_node_recursive(child, scale_mult)
-
+		if child is CollisionShape2D:
+			var s = child.shape
+			if s:
+				_scale_shape(s, scale_vec)
 
 static func _scale_shape(shape: Object, scale_mult: Vector2) -> void:
-	# Faz um best-effort para tipos comuns de Shape2D:
-	# tenta ler propriedades conhecidas e multiplicar adequadamente.
 	if not shape:
 		return
-
+	
 	var prop_list = shape.get_property_list()
 	var prop_names = []
 	for p in prop_list:
 		prop_names.append(p.name)
-
-	# extents / size (Vector2)
+	
 	if "extents" in prop_names:
 		var v = shape.get("extents")
 		shape.set("extents", Vector2(v.x * scale_mult.x, v.y * scale_mult.y))
@@ -188,28 +75,15 @@ static func _scale_shape(shape: Object, scale_mult: Vector2) -> void:
 		var v2 = shape.get("size")
 		shape.set("size", Vector2(v2.x * scale_mult.x, v2.y * scale_mult.y))
 		return
-
-	# radius (CircleShape2D)
+	
 	if "radius" in prop_names:
 		var r = float(shape.get("radius"))
 		shape.set("radius", r * max(scale_mult.x, scale_mult.y))
 		return
-
-	# height / radius (Capsule)
+	
 	if "height" in prop_names and "radius" in prop_names:
 		var h = float(shape.get("height"))
 		var rad = float(shape.get("radius"))
 		shape.set("height", h * scale_mult.y)
 		shape.set("radius", rad * max(scale_mult.x, scale_mult.y))
 		return
-
-	# points / vertices (Polygon / ConvexPolygon)
-	if "points" in prop_names:
-		var pts = shape.get("points")
-		for i in range(pts.size()):
-			pts[i] = Vector2(pts[i].x * scale_mult.x, pts[i].y * scale_mult.y)
-		shape.set("points", pts)
-		return
-
-	# fallback: tenta multiplicar propriedades numéricas/vec2 conhecidas
-	# (se nada for reconhecido, o shape pode precisar de ajuste manual)

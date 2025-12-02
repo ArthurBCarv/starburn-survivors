@@ -11,9 +11,10 @@ config_version=5
 [application]
 
 config/name="Starburn Survivors"
-run/main_scene="uid://dp2qeho6e505k"
+run/main_scene="uid://d3p3fybbb208o"
 config/features=PackedStringArray("4.5", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://b3db0nvusvnlv"
+config/windows_native_icon="res://Game.ico"
 
 [autoload]
 
@@ -23,8 +24,8 @@ VFXManager="*res://src/vfx/vfx_manager.gd"
 
 [display]
 
-window/size/viewport_width=2000
-window/size/viewport_height=2000
+window/size/viewport_width=1920
+window/size/viewport_height=1200
 
 [importer_defaults]
 
