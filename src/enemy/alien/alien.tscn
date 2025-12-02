@@ -15,7 +15,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_afpow"]
-size = Vector2(32, 28)
+size = Vector2(16, 19)
 
 [node name="Alien" type="CharacterBody2D"]
 collision_layer = 2

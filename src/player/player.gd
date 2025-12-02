@@ -62,14 +62,8 @@ func _process(delta):
 			$Gun.scale.y = 1
 		$Gun.rotation  =  lerp_angle($Gun.rotation, angle, fire_rate)
 
-	# DEBUG: Pressione T para ganhar XP rapidamente
-	if Input.is_action_just_pressed("ui_text_completion_accept") or Input.is_key_pressed(KEY_T):
-		if player_level:
-			player_level.add_xp(10)
-			print("[Player DEBUG] +10 XP (Total: %d/%d)" % [player_level.xp, player_level.xp_to_next_level])
-
 func _move(delta):
-	var input_vector = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var input_vector = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if input_vector != Vector2.ZERO:
 		move_dir = input_vector.normalized()
 	velocity = input_vector * speed

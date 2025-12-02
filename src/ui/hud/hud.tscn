@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://cm14w1inikn7x"]
+[gd_scene load_steps=7 format=3 uid="uid://cm14w1inikn7x"]
 
 [ext_resource type="Script" uid="uid://co7d7q23tdm3j" path="res://src/ui/hud/hud.gd" id="1"]
+[ext_resource type="Theme" uid="uid://cbtltdmbgna26" path="res://addons/Theme/PixelArtFOnt.tres" id="2_cvkdw"]
+[ext_resource type="FontFile" uid="uid://g72b5rb2xdyl" path="res://addons/font/Pixel/VCR_OSD_MONO_1.001.ttf" id="3_udh2q"]
+
+[sub_resource type="Theme" id="Theme_076te"]
+default_font = ExtResource("3_udh2q")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ariom"]
+bg_color = Color(0.6, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_cio14"]
+ProgressBar/fonts/font = ExtResource("3_udh2q")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_ariom")
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1")
@@ -13,57 +25,60 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="XPLabel" type="Label" parent="Root"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -63.5
-offset_top = -23.0
-offset_right = 63.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "LV 1 — XP: 0 / 20"
-horizontal_alignment = 1
-
 [node name="TopBar" type="HBoxContainer" parent="Root"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_left = 16.0
 offset_top = 17.0
-offset_right = -408.0
+offset_right = -62.0
 offset_bottom = 44.0
 grow_horizontal = 2
 theme_override_constants/separation = 40
 
 [node name="WaveLabel" type="Label" parent="Root/TopBar"]
+texture_filter = 1
 layout_mode = 2
+theme = ExtResource("2_cvkdw")
 theme_override_font_sizes/font_size = 18
 text = "Wave: 1"
 
 [node name="StateLabel" type="Label" parent="Root/TopBar"]
+texture_filter = 1
 layout_mode = 2
+theme = SubResource("Theme_076te")
 text = "Estado: Normal"
 
 [node name="EnemiesLabel" type="Label" parent="Root/TopBar"]
+texture_filter = 1
 layout_mode = 2
+theme = ExtResource("2_cvkdw")
 text = "Inimigos: 0 / 0"
 
 [node name="HPBox" type="HBoxContainer" parent="Root/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
 theme_override_constants/separation = 8
 
 [node name="HPLabel" type="Label" parent="Root/TopBar/HPBox"]
+texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_cvkdw")
 text = "HP"
 
 [node name="HPBar" type="ProgressBar" parent="Root/TopBar/HPBox"]
-modulate = Color(1, 0, 0, 1)
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 8
+theme = SubResource("Theme_cio14")
 value = 100.0
+
+[node name="XPLabel" type="Label" parent="Root/TopBar"]
+texture_filter = 1
+layout_mode = 2
+theme = ExtResource("2_cvkdw")
+text = "LV 1 — XP: 0 / 20"
+horizontal_alignment = 1

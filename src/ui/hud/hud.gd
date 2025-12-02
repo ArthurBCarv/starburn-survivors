@@ -75,13 +75,6 @@ func _on_player_health_changed(current: float, max_value: float) -> void:
 
 
 func _on_player_xp_changed(xp: int, xp_to_next: int, level: int) -> void:
-	var xp_bar = get_node_or_null("Root/XPBar")
-	if xp_bar:
-		xp_bar.max_value = xp_to_next
-		xp_bar.value = xp
-	
-	var xp_label = get_node_or_null("Root/XPLabel")
-	if xp_label:
-		xp_label.text = "LV %d — XP: %d / %d" % [level, xp, xp_to_next]
+	$Root/TopBar/XPLabel.text = "LV %d — XP: %d / %d" % [level, xp, xp_to_next]
 	
 	print("[HUD] XP atualizado: %d/%d (Level %d)" % [xp, xp_to_next, level])

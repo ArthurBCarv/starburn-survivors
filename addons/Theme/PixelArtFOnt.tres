@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://cbtltdmbgna26"]
+
+[ext_resource type="FontFile" uid="uid://bostvqf0wr5he" path="res://addons/font/sci-fi/static/Orbitron-Regular.ttf" id="1_rs251"]
+[ext_resource type="FontFile" uid="uid://g72b5rb2xdyl" path="res://addons/font/Pixel/VCR_OSD_MONO_1.001.ttf" id="1_ss7se"]
+
+[resource]
+default_font = ExtResource("1_ss7se")
+Label/fonts/font = ExtResource("1_rs251")

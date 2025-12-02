@@ -10,7 +10,7 @@ func _ready() -> void:
 	base_health = 30.0
 	base_damage = 10.0
 	speed = 100.0
-	xp_reward = 10
+	xp_reward = 5
 	attack_cooldown = 1.0
 	attack_range = 25.0
 	
